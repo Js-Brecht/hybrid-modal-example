@@ -35,7 +35,7 @@ Now, in the root directory of the project, create a file called `.env`, and put 
 GATSBY_UNSPLASH_ACCESS_KEY=<UnsplashKey>
 ```
 
-_(replace "<UnsplashKey>" with the key you copied in the previous step)_
+_(replace "\<UnsplashKey\>" with the key you copied in the previous step)_
 
 ### Run the app
 
