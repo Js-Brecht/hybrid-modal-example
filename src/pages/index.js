@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { graphql } from "gatsby"
 
+import { Spinner } from 'react-bootstrap';
 import Layout from "../components/layout"
 import Image from "../components/image"
 import SEO from "../components/seo"
@@ -28,11 +29,13 @@ const IndexPage = ({ data }) => {
   
   useEffect(() => {
     if (postData.more) {
-      fetch(`${process.env.GATSBY_SERVER_URL}/posts?start=${postData.start}`)
-        .then(res => res.json())
-        .then(data => {
-          setPosts(p => getPosts(p.posts.concat(data), false))
-        });
+      setTimeout(() => {
+        fetch(`${process.env.GATSBY_SERVER_URL}/posts?start=${postData.start}`)
+          .then(res => res.json())
+          .then(data => {
+            setPosts(p => getPosts(p.posts.concat(data), false))
+          });
+      }, 5000);
     }
   }, [postData])
 
@@ -55,6 +58,16 @@ const IndexPage = ({ data }) => {
             </div>
         ))}
       </div>
+      {
+        postData.more && (
+          <div style={{
+            display: 'block',
+            width: '10px',
+            margin: 'auto',
+          }}>
+            <Spinner animation="grow" variant="info" />
+          </div>
+      )}
       { modalInfo && <DataModal post={modalInfo} close={closeModal} show={!!modalInfo} /> }
     </Layout>
   )
