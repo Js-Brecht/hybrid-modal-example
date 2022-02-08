@@ -32,13 +32,12 @@ module.exports = (started = () => null) => {
             // not usually needed, but this is a contrived example
             type = 'runtime',
             // which image id to start at
-            start = 0,
+            start = ""
         } = req.query;
 
         const data = await getData();
 
-        const startInt = parseInt(start) || 0;
-        const startIndex = data.findIndex((val) => val.id === startInt + 1)
+        const startIndex = start && data.findIndex((val) => val.postId === start) + 1 || 0;
         const dataSlice = data.slice(
             startIndex,
             // limit to only the first 5 images if this is a build time call

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { graphql } from "gatsby"
+import { parse as parseQuery } from "querystring";
 
 import { Spinner } from 'react-bootstrap';
 import Layout from "../components/layout"
@@ -8,22 +9,20 @@ import SEO from "../components/seo"
 import { DataModal } from "../components/modal"
 
 const getPosts = (edges, more) => {
-  let start = 0;
   const posts = edges.map((post) => {
-    const node = Object.keys(post).length === 1 && post.node ? post.node : post;
-    start = Math.max(node.postId || node.id, start);
-    return node
+    return Object.keys(post).length === 1 && post.node ? post.node : post;
   });
   return {
-    start,
+    start: posts.slice(-1).pop().postId,
     posts,
     more,
   }
 }
 
-const IndexPage = ({ data }) => {
+const IndexPage = ({ data, location }) => {
   const [postData, setPosts] = useState(() => getPosts(data.allPost.edges, true));
   const [modalInfo, setModalInfo] = useState(null);
+  const queryParams = useMemo(() => parseQuery(location.search.slice(1)), [location]);
 
   const closeModal = () => setModalInfo(null);
   
@@ -37,7 +36,18 @@ const IndexPage = ({ data }) => {
           });
       }, 5000);
     }
-  }, [postData])
+  }, [postData, queryParams.showModal])
+
+  useEffect(() => {
+    if (queryParams.show) {
+      const showPost = postData.posts.find(
+        (p) => (p.postId || p.id) === queryParams.show
+      )
+      if (showPost) {
+        setModalInfo(showPost);
+      }
+    }
+  }, [postData, queryParams, queryParams.show]);
 
   return (
     <Layout>

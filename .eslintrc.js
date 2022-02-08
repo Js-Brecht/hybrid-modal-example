@@ -4,6 +4,7 @@ module.exports = {
     },
     extends: `react-app`,
     rules: {
-      "no-unused-vars": "off"
+      "no-unused-vars": "off",
+      "no-mixed-operators": "off"
     }
 }

@@ -52,9 +52,9 @@ exports.getData = async () => {
         const images = await unsplash.search.photos('people', 1, 10, {
             orientation: 'portrait',
         }).then(Unsplash.toJson);
-        for (const [idx, image] of images.results.entries()) {
+        for (const image of images.results) {
             const dataNode = {
-                id: idx + 1,
+                postId: image.id,
                 name: lorem.generateWords(2),
                 age: Math.floor(Math.random() * (maxAge - minAge)) + minAge,
                 image
