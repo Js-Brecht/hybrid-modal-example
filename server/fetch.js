@@ -40,13 +40,13 @@ exports.getImagePath = getImagePath;
 let data;
 exports.getData = async () => {
     for (const folder of [cacheDir, imageDir]) {
-        if (!(await fs.exists(folder))) {
+        if (!(await fs.pathExists(folder))) {
             await fs.mkdirp(folder);
         }
     }
 
-    if ((await fs.exists(dataCache))) {
-        data = new Map(JSON.parse((await fs.readFile(dataCache)).toString()));
+    if ((await fs.pathExists(dataCache))) {
+        data = new Map(JSON.parse((await fs.readFile(dataCache, "utf8"))));
     } else {
         data = new Map();
         const images = await unsplash.search.photos('people', 1, 10, {
@@ -60,7 +60,7 @@ exports.getData = async () => {
                 image
             }
             const imagePath = getImagePath(image.id);
-            if (!(await fs.exists(imagePath))) {
+            if (!(await fs.pathExists(imagePath))) {
                 unsplash.photos.downloadPhoto(image);
                 const imageData = await fetch(image.links.download).then((res) => res.buffer());
                 await fs.writeFile(imagePath, imageData);
