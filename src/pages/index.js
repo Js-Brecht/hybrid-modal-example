@@ -7,22 +7,22 @@ import Image from "../components/image"
 import SEO from "../components/seo"
 import { DataModal } from "../components/modal"
 
-const IndexPage = ({ data }) => {
-  const getPosts = (edges, more) => {
-    let start = 0;
-    const posts = edges.map((post) => {
-      const node = Object.keys(post).length === 1 && post.node ? post.node : post;
-      start = Math.max(node.postId || node.id, start);
-      return node
-    });
-    return {
-      start,
-      posts,
-      more,
-    }
+const getPosts = (edges, more) => {
+  let start = 0;
+  const posts = edges.map((post) => {
+    const node = Object.keys(post).length === 1 && post.node ? post.node : post;
+    start = Math.max(node.postId || node.id, start);
+    return node
+  });
+  return {
+    start,
+    posts,
+    more,
   }
+}
 
-  const [postData, setPosts] = useState(getPosts(data.allPost.edges, true));
+const IndexPage = ({ data }) => {
+  const [postData, setPosts] = useState(() => getPosts(data.allPost.edges, true));
   const [modalInfo, setModalInfo] = useState(null);
 
   const closeModal = () => setModalInfo(null);
